@@ -1,6 +1,6 @@
 
 const products = [
-    
+
     { id: 1, name: "Эфиопский кофе", price: 890, category: "coffee", image: "image/Gemini_Generated_Image_n4fjdin4fjdin4fj.png", link: "item1.html" },
     { id: 2, name: "Раф кофе", price: 250, category: "coffee", image: "image/1raf-kofe-raf.jpg", link: "item2.html" },
     { id: 3, name: "Капучино", price: 220, category: "coffee", image: "image/capuchino.jpg", link: "item3.html" },
@@ -12,8 +12,38 @@ const products = [
 ];
 
 
-let cart = [];  
-let currentCategory = "all";  
+let cart = [];
+let currentCategory = "all";
+
+
+
+
+const STORAGE_KEY = "cuptea_cart";
+
+
+const saveCartToLocalStorage = () => {
+    
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
+    console.log("Корзина сохранена в LocalStorage");
+};
+
+
+const loadCartFromLocalStorage = () => {
+    const savedCart = localStorage.getItem(STORAGE_KEY);
+    
+    if (savedCart) {
+        
+        cart = JSON.parse(savedCart);
+        console.log("Корзина загружена из LocalStorage", cart);
+        
+        renderCart();
+    } else {
+        console.log("Нет сохраненной корзины, начинаем с пустой");
+        cart = [];
+    }
+};
+
+
 const productsContainer = document.getElementById("products-container");
 const cartItemsContainer = document.getElementById("cart-items");
 const cartTotalElement = document.getElementById("cart-total");
@@ -22,15 +52,20 @@ const checkoutBtn = document.getElementById("checkout");
 const filterBtns = document.querySelectorAll(".filter-btn");
 
 
+
+
 const addToCart = (product) => {
     cart.push(product);
-    renderCart();  
-    showNotification(`${product.name} добавлен в корзину!`);
+    saveCartToLocalStorage(); 
+    renderCart();
+    console.log(`${product.name} добавлен в корзину!`);
 };
+
 
 const removeFromCart = (productId) => {
     cart = cart.filter(item => item.id !== productId);
-    renderCart();  
+    saveCartToLocalStorage();  
+    renderCart();
 };
 
 
@@ -40,9 +75,7 @@ const calculateTotal = () => {
 
 
 const renderCart = () => {
- 
     cartItemsContainer.innerHTML = "";
-    
     
     if (cart.length === 0) {
         cartItemsContainer.innerHTML = '<div class="empty-cart">Корзина пуста</div>';
@@ -50,7 +83,6 @@ const renderCart = () => {
         return;
     }
     
-   
     cart.forEach(item => {
         const cartItem = document.createElement("div");
         cartItem.className = "cart-item";
@@ -70,10 +102,11 @@ const renderCart = () => {
             removeFromCart(id);
         });
     });
-
+    
     const total = calculateTotal();
     cartTotalElement.textContent = `Итого: ${total} ₽`;
 };
+
 
 const clearCart = () => {
     if (cart.length === 0) {
@@ -81,9 +114,11 @@ const clearCart = () => {
         return;
     }
     cart = [];
+    saveCartToLocalStorage();  
     renderCart();
     alert("Корзина очищена");
 };
+
 
 const checkout = () => {
     if (cart.length === 0) {
@@ -94,21 +129,17 @@ const checkout = () => {
     const total = calculateTotal();
     alert(`Покупка прошла успешно! Сумма: ${total} ₽. Спасибо за заказ!`);
     cart = [];
+    saveCartToLocalStorage(); 
     renderCart();
 };
 
-const showNotification = (message) => {
-    console.log(message);
-};
 
 const renderProducts = () => {
     productsContainer.innerHTML = "";
     
-   
     const filteredProducts = currentCategory === "all" 
         ? products 
         : products.filter(product => product.category === currentCategory);
-    
     
     if (filteredProducts.length === 0) {
         productsContainer.innerHTML = '<div style="text-align: center; width: 100%; padding: 50px;">Нет товаров в этой категории</div>';
@@ -132,7 +163,6 @@ const renderProducts = () => {
         productsContainer.appendChild(productCard);
     });
     
-   
     document.querySelectorAll(".add-to-cart-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
             const productId = parseInt(btn.dataset.id);
@@ -146,21 +176,17 @@ const renderProducts = () => {
 
 
 clearCartBtn.addEventListener("click", clearCart);
-
 checkoutBtn.addEventListener("click", checkout);
 
 filterBtns.forEach(btn => {
     btn.addEventListener("click", () => {
-      
         filterBtns.forEach(b => b.classList.remove("active"));
-       
         btn.classList.add("active");
-        
         currentCategory = btn.dataset.category;
-        
         renderProducts();
     });
 });
 
+loadCartFromLocalStorage();
 
 renderProducts();
