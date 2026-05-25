@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>CUPTEA - Каталог</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+    .filter-buttons {
+        margin: 20px 0;
+        text-align: center;
+    }
+    
+    .filter-btn {
+        background: rgb(120, 70, 40);
+        color: rgb(255, 235, 200);
+        border: none;
+        padding: 10px 20px;
+        margin: 0 5px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s;
+    }
+    
+    .filter-btn:hover {
+        background: rgb(160, 100, 60);
+        transform: scale(1.05);
+    }
+    
+    .filter-btn.active {
+        background: rgb(180, 120, 70);
+        border: 2px solid white;
+    }
+    
+    
+    .cart-section {
+        background: rgb(245, 225, 200);
+        border-radius: 20px;
+        padding: 20px;
+        margin: 30px 0;
+        border: 2px solid rgb(160, 100, 60);
+    }
+    
+    .cart-section h3 {
+        margin-top: 0;
+        color: rgb(100, 50, 30);
+        border-bottom: 2px solid rgb(160, 100, 60);
+        padding-bottom: 10px;
+    }
+    
+    .cart-items {
+        min-height: 100px;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid rgb(200, 160, 120);
+        background: rgb(255, 245, 230);
+        margin: 5px 0;
+        border-radius: 10px;
+    }
+    
+    .cart-item-info {
+        flex: 1;
+    }
+    
+    .cart-item-name {
+        font-weight: bold;
+        color: rgb(100, 50, 30);
+    }
+    
+    .cart-item-price {
+        color: rgb(140, 70, 30);
+        font-size: 14px;
+    }
+    
+    .remove-btn {
+        background: rgb(200, 100, 70);
+        color: white;
+        border: none;
+        padding: 5px 12px;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .remove-btn:hover {
+        background: rgb(180, 70, 40);
+        transform: scale(1.05);
+    }
+    
+    .cart-total {
+        text-align: right;
+        font-size: 20px;
+        font-weight: bold;
+        color: rgb(100, 50, 30);
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 2px solid rgb(160, 100, 60);
+    }
+    
+    .cart-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    .cart-btn {
+        background: rgb(120, 70, 40);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 16px;
+    }
+    
+    .cart-btn:hover {
+        background: rgb(160, 100, 60);
+        transform: scale(1.05);
+    }
+    
+    .cart-btn.clear-btn {
+        background: rgb(150, 100, 70);
+    }
+    
+    .cart-btn.pay-btn {
+        background: rgb(100, 130, 80);
+    }
+    
+    .cart-btn.pay-btn:hover {
+        background: rgb(70, 100, 50);
+    }
+    
+    .empty-cart {
+        text-align: center;
+        color: rgb(120, 70, 40);
+        padding: 20px;
+        font-style: italic;
+    }
+    
+    /* Стили для товаров в каталоге */
+    .product-card {
+        position: relative;
+    }
+    
+    .add-to-cart-btn {
+        background: rgb(120, 70, 40);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        margin-top: 10px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+    }
+    
+    .add-to-cart-btn:hover {
+        background: rgb(160, 100, 60);
+        transform: scale(1.02);
+    }
+    
+    .price {
+        font-size: 18px;
+        font-weight: bold;
+        color: rgb(140, 70, 30);
+        margin: 10px 0;
+    }
+</style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Главная</a></li>
+                <li><a href="catalog.html">Каталог</a></li>
+            </ul>
+        </nav>
+        <h1>CUPTEA</h1>
+    </header>
+    <hr>
+
+    <main>
+        <h2>Каталог</h2>
+        
+     
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-category="all">Все</button>
+            <button class="filter-btn" data-category="coffee">Кофе</button>
+            <button class="filter-btn" data-category="pastry">Выпечка</button>
+        </div>
+        
+        
+        <div id="products-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
+            
+        </div>
+        
+       
+        <div class="cart-section">
+            <h3>🛒 Корзина</h3>
+            <div id="cart-items" class="cart-items">
+                <div class="empty-cart">Корзина пуста</div>
+            </div>
+            <div id="cart-total" class="cart-total">Итого: 0 ₽</div>
+            <div class="cart-buttons">
+                <button id="clear-cart" class="cart-btn clear-btn">Очистить корзину</button>
+                <button id="checkout" class="cart-btn pay-btn">Оплатить</button>
+            </div>
+        </div>
+        
+    </main>
+
+    <hr>
+
+    <footer>
+        <p>&copy; 2026 CUPTEA. Все права защищены.</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
